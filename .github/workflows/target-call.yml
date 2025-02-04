@@ -1,8 +1,10 @@
-name: Target Mad Infra
+name: Target Mad Infra ALH changes
 on:
   pull_request:
     branches:
       - main
+    paths:
+      - alh/*
 
 permissions:
   id-token: write
@@ -24,3 +26,10 @@ jobs:
       - name: List all changed files
         run: |
           echo "All changed files: ${{ steps.changed_files.outputs.all_modified_files }}"
+          temp = "alh/central-comp/nonprd-config.yaml,alh/central-comp/project-config.yaml"
+          file_changed = ${{ steps.changed_files.outputs.all_modified_files }}
+          for file in $file_changed; do
+            echo "File changed: $file"
+          done
+
+        
