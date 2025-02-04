@@ -43,14 +43,29 @@ jobs:
   #     #   with:
   #     #     opcopath: ${{ matrix.opco }}
 
+  detect-components:
+    name: Determine target components
+    runs-on: ubuntu-latest
+    env:
+      OP_CO: alh
+    outputs:
+      component_matrix: ${{ steps.target-comp.outputs.component_matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploying target components
+        id: target-comp
+        uses: ./.github/actions/target
+        with:
+          opcopath: ${{ env.OP_CO }}
   deploy-component:
     name: Plan for ${{ matrix.component }}
+    needs:  detect-components
     runs-on: ubuntu-latest
     env:
       OP_CO: alh
     strategy:
       matrix:
-        component: ${{ steps.target-comp.outputs.component_matrix }}
+        component: ${{ fromJson(needs.detect-components.outputs.component_matrix) }}
     steps:
       - uses: actions/checkout@v4
       - name: Deploying target components
