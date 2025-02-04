@@ -17,11 +17,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Determine changed files
         id: changed_files
-        uses: tj-actions/changed-files@77af4bed286740ef1a6387dc4e4e4dec39f96054
-      - name: List all changed files
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
-        run: |
-          for file in ${ALL_CHANGED_FILES}; do
-            echo "$file was changed"
-          done
+        uses: tj-actions/changed-files@v45
+
+      # - name: List all changed files
+      #   env:
+      #     ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+      #   run: |
+      #     echo "All changed files: $ALL_CHANGED_FILES"
