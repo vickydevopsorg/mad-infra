@@ -45,19 +45,26 @@ jobs:
           source: ./${{ env.OP_CO }}/${{ matrix.component }}/${{ matrix.environment }}-config.yaml
           target: ./${{ env.OP_CO }}/${{ matrix.component }}/project-config.yaml
 
-      - name: Printing config yaml
+      - name: Output config
         shell: bash
+        id: tfconfig 
         run: |
           echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
-          echo "config_path=${{ steps.config.outputs.config_path }}"
-          cat ${{ steps.config.outputs.config_path }}
+          echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
+          echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
       
-      - name: Backend config copy
+      - name: print output
         shell: bash
         run: |
-          echo "Running backend for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
-          echo "===== backend ==="
-          cat ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
-      
+           echo "Printing all configs"
+           echo "${{ steps.tfconfig.outputs.deploy_config }}"
+           echo "${{ steps.tfconfig.outputs.backends_config }}"
+
+      # - uses: vickydevopsorg/mad-core/.github/actions/terraform@main
+      #   with:
+      #     environment: ${{ matrix.environment }}
+      #     deployment_target: ${{ matrix.component }}
+      #     backends_config: ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
+      #     deploy_config: ${{ env.OP_CO }}/${{ matrix.component }}/config.yaml
       
       
