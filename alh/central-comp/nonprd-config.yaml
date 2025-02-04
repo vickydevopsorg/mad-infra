@@ -6,7 +6,7 @@
 
 # # Authentication Details
 service_principal_id: 
-  - "s456"  # 
+  - "s456"  # service principal id
 # aad_group_object_id: 
 #   - "a567" #
 
