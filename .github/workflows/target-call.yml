@@ -17,20 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Determine changed files
-        id: changed_files
-        uses: tj-actions/changed-files@v45
-        with:
-          separator: ","
-          files_ignore: .github/**
-      - name: List all changed files
-        run: |
-          CONFIG_PATHS="alh/central-comp/nonprd-config.yaml,gso/central-comp/project-config.yaml,alh/central-comp/project-config.yaml,gso/central-comp/nonprd-config.yaml,ebs/central-comp/nonprd-config.yaml"
-          UNIQUE_OPCOS=$(echo "$CONFIG_PATHS" | tr ',' '\n' | cut -d'/' -f1 | sort -u | jq -R . | jq -s -c .)
-          echo "Unique OPCOs: $UNIQUE_OPCOS"
-          echo "opco_matrix=$UNIQUE_OPCOS" >> $GITHUB_OUTPUT
-          echo "All changed files: ${{ steps.changed_files.outputs.all_modified_files }}"
-      
+        
+      - name: Opco change
+        id: opco
+        uses: ./.github/actions/opco
+
   deploy-opco:
     needs: detect_changes
     name: Deploying ${{ matrix.opco }}

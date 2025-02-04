@@ -1,22 +1,20 @@
 name: Determine changed opcos
-description: Checks which projects have changed since the last commit and outputs a list of changed projects
-# outputs:
-#   opco:
-#     description: "The changed opco"
-#     value: ${{ steps.changed_opcos.outputs.opcos }}
+description: Checks which opcos have changed and sets the matrix for the next job
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v4
-    - name: Determine changed files
-      id: changed_files
-      uses: tj-actions/changed-files@v45
-      with:
-        separator: ","
-        files_ignore: .github/**
-    
-    - name: Determine changed opcos
-      id: changed_opcos
+    # - name: Determine changed files
+    #   id: changed_files
+    #   uses: tj-actions/changed-files@v45
+    #   with:
+    #     separator: ","
+    #     files_ignore: .github/**
+    - name: List all changed files
       shell: bash
       run: |
-       echo "${{ steps.changed_files.outputs.all_modified_files }}" | tr ',' '\n' | cut -d'/' -f1 | sort -u
+        CONFIG_PATHS="alh/central-comp/nonprd-config.yaml,gso/central-comp/project-config.yaml,alh/central-comp/project-config.yaml,gso/central-comp/nonprd-config.yaml,ebs/central-comp/nonprd-config.yaml"
+        UNIQUE_OPCOS=$(echo "$CONFIG_PATHS" | tr ',' '\n' | cut -d'/' -f1 | sort -u | jq -R . | jq -s -c .)
+        echo "Unique OPCOs: $UNIQUE_OPCOS"
+        echo "opco_matrix=$UNIQUE_OPCOS" >> $GITHUB_OUTPUT
+        echo "All changed files: ${{ steps.changed_files.outputs.all_modified_files }}"
