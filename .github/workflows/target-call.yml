@@ -1,4 +1,4 @@
-name: Target Mad Infra ALH changes
+name: Target Mad Infra ALH Central-comp changes
 on:
   pull_request:
     branches:
@@ -25,9 +25,26 @@ jobs:
           files_ignore: .github/**
       - name: List all changed files
         run: |
+          CONFIG_PATHS="alh/central-comp/nonprd-config.yaml,gso/central-comp/project-config.yaml,alh/central-comp/project-config.yaml,gso/central-comp/nonprd-config.yaml,ebs/central-comp/nonprd-config.yaml"
+          UNIQUE_OPCOS=$(echo "$CONFIG_PATHS" | tr ',' '\n' | cut -d'/' -f1 | sort -u | jq -R . | jq -s -c .)
+          echo "Unique OPCOs: $UNIQUE_OPCOS"
+          echo "::set-output name=opco_matrix::$UNIQUE_OPCOS"
           echo "All changed files: ${{ steps.changed_files.outputs.all_modified_files }}"
-          for file in ${{ steps.changed_files.outputs.all_modified_files }}; do
-            echo "File changed: $file"
-          done
+      
+  deploy-opco:
+    needs: detect_changes
+    name: Deploying ${{ matrix.opco }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        opco: ${{ needs.detect_changes.outputs.opco_matrix }}
+    steps:
+      - name: Plan ${{ matrix.opco }}
+        shell: bash
+        run: |
+          echo "Running job for OPCO: ${{ matrix.opco }}"
+
+
+        
 
         
