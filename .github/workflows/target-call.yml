@@ -43,4 +43,4 @@ jobs:
       
       - name: printing
         run: |
-          echo "changed files for opco ${{ matrix.opco }} are ${{ steps.target_comp.outputs.component_matrix }}"
+          echo "changed files for opco ${{ matrix.opco }} are ${{ steps.target-comp.outputs.component_matrix }}"
