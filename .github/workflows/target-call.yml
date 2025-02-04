@@ -28,7 +28,7 @@ jobs:
           CONFIG_PATHS="alh/central-comp/nonprd-config.yaml,gso/central-comp/project-config.yaml,alh/central-comp/project-config.yaml,gso/central-comp/nonprd-config.yaml,ebs/central-comp/nonprd-config.yaml"
           UNIQUE_OPCOS=$(echo "$CONFIG_PATHS" | tr ',' '\n' | cut -d'/' -f1 | sort -u | jq -R . | jq -s -c .)
           echo "Unique OPCOs: $UNIQUE_OPCOS"
-          echo "::set-output name=opco_matrix::$UNIQUE_OPCOS"
+          echo "opco_matrix=$UNIQUE_OPCOS" >> $GITHUB_OUTPUT
           echo "All changed files: ${{ steps.changed_files.outputs.all_modified_files }}"
       
   deploy-opco:
