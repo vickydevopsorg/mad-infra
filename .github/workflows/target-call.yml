@@ -1,0 +1,27 @@
+name: Target Mad Infra
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  detect_changes:
+    name: Determine solution to deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Determine changed files
+        id: changed_files
+        uses: tj-actions/changed-files@77af4bed286740ef1a6387dc4e4e4dec39f96054
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done

@@ -1,0 +1,20 @@
+# This is the common project configuration.  
+# Any settings defined in an environment-specific config will override these values.  
+# Add shared configurations here to ensure they are applied across all environments,  
+# while allowing environment-specific configurations to customize as needed.
+
+
+project: "mad-central-comp"  # Required Project identifier
+resource_index: "01"  # Resource index for tracking
+
+# Authentication Details
+service_principal_id: 
+  - "s1234"  # id-cicd-nl-ddplatform-mad-nonprd-weeu-01
+aad_group_object_id: 
+  - "a123" # tac-aleu-technl-ddp-team-customer-enablement-mad-devops-engineer
+
+
+# Metadata Tags
+tags:
+  Project Name: "Mad Framework Central Component"  # Descriptive project name
+  Type: "Mad Framework"  # Type of project

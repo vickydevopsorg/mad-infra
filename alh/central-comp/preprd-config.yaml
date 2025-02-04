@@ -1,0 +1,15 @@
+# preprd env specific config
+# Project Configuration
+# project: "central-comp"  # Required Project identifier
+# resource_index: "01"  # Resource index for tracking
+
+# # Authentication Details
+# service_principal_id: 
+#   - "s000"  # 
+# aad_group_object_id: 
+#   - "a000" #
+
+# # Metadata Tags
+# tags:
+#   Project Name: "Mad Framework Central Component"  # Descriptive project name
+#   Type: "Mad Framework"  # Type of project
