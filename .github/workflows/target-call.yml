@@ -79,7 +79,7 @@ jobs:
       - name: Printing config
         shell: bash
         run: |
-          echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-{{ matrix.component }}"
+          echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
           echo "config_path=${{ steps.config.outputs.config_path }}"
           cat ${{ steps.config.outputs.config_path }}
       
