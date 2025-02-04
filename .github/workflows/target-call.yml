@@ -15,9 +15,11 @@ jobs:
   detect_changes:
     name: Determine solution to deploy
     runs-on: ubuntu-latest
+    outputs:
+      opco_matrix: ${{ steps.opco.outputs.opco_matrix }}
     steps:
       - uses: actions/checkout@v4
-        
+
       - name: Opco change
         id: opco
         uses: ./.github/actions/opco
@@ -28,9 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        opco: ${{ needs.detect_changes.outputs.opco_matrix }}
+        opco: ${{ fromJson(needs.detect_changes.outputs.opco_matrix) }}
     steps:
-      - name: Plan ${{ matrix.opco }}
+      - name: Printing
         shell: bash
         run: |
           echo "Running job for OPCO: ${{ matrix.opco }}"
