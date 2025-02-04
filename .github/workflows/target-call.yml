@@ -57,7 +57,7 @@ jobs:
         run: |
           echo "Running backend for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
           echo "===== backend ==="
-          cat ${{ env.OP_CO }}/backends/${{ matrix.environment }}-backend.yaml
+          cat ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
       
       
       
