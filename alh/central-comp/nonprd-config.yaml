@@ -5,8 +5,8 @@
 # resource_index: "01"  # Resource index for tracking
 
 # # Authentication Details
-# service_principal_id: 
-#   - "s456"  # 
+service_principal_id: 
+  - "s456"  # 
 # aad_group_object_id: 
 #   - "a567" #
 
