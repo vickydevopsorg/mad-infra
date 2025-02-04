@@ -34,7 +34,7 @@ jobs:
       OP_CO: alh
     strategy:
       matrix:
-        environment: [nonprd, preprd, prd]
+        environment: [nonprd]
         component: ${{ fromJson(needs.detect-components.outputs.component_matrix) }}
     steps:
       - uses: actions/checkout@v4
@@ -53,18 +53,18 @@ jobs:
           echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
           echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
       
-      - name: print output
-        shell: bash
-        run: |
-           echo "Printing all configs"
-           echo "${{ steps.tfconfig.outputs.deploy_config }}"
-           echo "${{ steps.tfconfig.outputs.backends_config }}"
+      # - name: print output
+      #   shell: bash
+      #   run: |
+      #      echo "Printing all configs"
+      #      echo "${{ steps.tfconfig.outputs.deploy_config }}"
+      #      echo "${{ steps.tfconfig.outputs.backends_config }}"
 
-      # - uses: vickydevopsorg/mad-core/.github/actions/terraform@main
-      #   with:
-      #     environment: ${{ matrix.environment }}
-      #     deployment_target: ${{ matrix.component }}
-      #     backends_config: ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
-      #     deploy_config: ${{ env.OP_CO }}/${{ matrix.component }}/config.yaml
+      - uses: vickydevopsorg/mad-core/.github/actions/terraform@main
+        with:
+          environment: ${{ matrix.environment }}
+          deployment_target: ${{ matrix.component }}
+          backends_config: ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
+          deploy_config: ${{ env.OP_CO }}/${{ matrix.component }}/config.yaml
       
       
