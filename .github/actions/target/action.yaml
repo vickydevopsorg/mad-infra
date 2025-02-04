@@ -24,4 +24,4 @@ runs:
       shell: bash
       run: |
         changed_files=${{ steps.changed_files.outputs.all_modified_files }}
-        echo "target_comp=$changed_files" >> $GITHUB_OUTPUT
+        echo "component_matrix=$changed_files" >> $GITHUB_OUTPUT
