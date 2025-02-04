@@ -1,10 +1,8 @@
-name: Target Mad Infra ALH Central-comp changes
+name: Target Mad Components
 on:
   pull_request:
     branches:
       - main
-    paths:
-      - 'alh/**'
 
 permissions:
   id-token: write
@@ -36,6 +34,16 @@ jobs:
         shell: bash
         run: |
           echo "Running job for OPCO: ${{ matrix.opco }}"
+      
+      - name: Deploying target components
+        id: target-comp
+        uses: ./.github/actions/target-comp
+        with:
+          opcopath: ${{ matrix.opco }}
+      
+      # - name: printing
+      #   run: |
+      #     echo "changed files for opco ${{ matrix.opco }} are ${{ steps.target_comp.outputs.component_matrix }}"
 
 
         

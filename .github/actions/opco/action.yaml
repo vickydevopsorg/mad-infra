@@ -1,4 +1,4 @@
-name: Determine changed opcos
+name: Determine opcos
 description: Checks which opcos have changed and sets the matrix for the next job
 outputs:
   opco_matrix:
@@ -14,7 +14,7 @@ runs:
       with:
         separator: ","
         files_ignore: .github/**
-    - name: List all changed files
+    - name: List all changed opcos
       id: opco
       shell: bash
       run: |

@@ -1,0 +1,26 @@
+name: Determine target components
+description: Checks which components have to be deployed
+inputs:
+  opcopath:
+    description: "The path to the opco folder"
+    required: true
+outputs:
+  component_matrix:
+    description: "The target components"
+    value:  ${{ steps.target_comp.outputs.component_matrix }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - name: Determine changed files
+      id: changed_files
+      uses: tj-actions/changed-files@v45
+      with:
+        separator: ","
+        path: ${{ inputs.opcopath }}
+    - name: List all changed opcos
+      id: target_comp
+      shell: bash
+      run: |
+        changed_files=${{ steps.changed_files.outputs.all_modified_files }}
+        echo "target_comp=$changed_files" >> $GITHUB_OUTPUT
