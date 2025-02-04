@@ -12,37 +12,6 @@ permissions:
   pull-requests: write
 
 jobs:
-  # detect_changes:
-  #   name: Determine solution to deploy
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     opco_matrix: ${{ steps.opco.outputs.opco_matrix }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Opco change
-  #       id: opco
-  #       uses: ./.github/actions/opco
-
-  # deploy-opco:
-  #   needs: detect_changes
-  #   name: Deploying ${{ matrix.opco }}
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       opco: ${{ fromJson(needs.detect_changes.outputs.opco_matrix) }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Printing
-  #       shell: bash
-  #       run: |
-  #         echo "Running job for OPCO: ${{ matrix.opco }}"
-      
-  #     # - name: Deploying target components
-  #     #   id: target-comp
-  #     #   uses: ./.github/actions/target
-  #     #   with:
-  #     #     opcopath: ${{ matrix.opco }}
-
   detect-components:
     name: Determine target components alh
     runs-on: ubuntu-latest
@@ -76,11 +45,19 @@ jobs:
           source: ./${{ env.OP_CO }}/${{ matrix.component }}/${{ matrix.environment }}-config.yaml
           target: ./${{ env.OP_CO }}/${{ matrix.component }}/project-config.yaml
 
-      - name: Printing config
+      - name: Printing config yaml
         shell: bash
         run: |
           echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
           echo "config_path=${{ steps.config.outputs.config_path }}"
           cat ${{ steps.config.outputs.config_path }}
+      
+      - name: Backend config copy
+        shell: bash
+        run: |
+          echo "Running backend for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
+          echo "===== backend ==="
+          cat ${{ env.OP_CO }}/backends/${{ matrix.environment }}-backend.yaml
+      
       
       
