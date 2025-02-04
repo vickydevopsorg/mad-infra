@@ -50,7 +50,7 @@ jobs:
       OP_CO: alh
     strategy:
       matrix:
-        component: ["central-comp", "databricks"]
+        component: ${{ steps.target-comp.outputs.component_matrix }}
     steps:
       - uses: actions/checkout@v4
       - name: Deploying target components

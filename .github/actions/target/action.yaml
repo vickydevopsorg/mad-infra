@@ -24,4 +24,5 @@ runs:
       shell: bash
       run: |
         changed_files=${{ steps.changed_files.outputs.all_modified_files }}
-        echo "component_matrix=$changed_files" >> $GITHUB_OUTPUT
+        component_matrix=$(echo "$changed_files" | tr ',' '\n' | cut -d'/' -f1 | sort -u | jq -R -s -c 'split("\n")[:-1]')
+        echo "component_matrix=$component_matrix" >> $GITHUB_OUTPUT
