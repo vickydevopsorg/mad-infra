@@ -16,5 +16,5 @@ aad_group_object_id:
 
 # Metadata Tags
 tags:
-  Project Name: "Mad Framework Central Component"  # Descriptive project name
+  Project Name: "Mad Framework Central common Component"  # Descriptive project name
   Type: "Mad Framework"  # Type of project
