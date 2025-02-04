@@ -44,7 +44,7 @@ jobs:
   #     #     opcopath: ${{ matrix.opco }}
 
   detect-components:
-    name: Determine target components
+    name: Determine target components alh
     runs-on: ubuntu-latest
     env:
       OP_CO: alh
@@ -58,24 +58,28 @@ jobs:
         with:
           opcopath: ${{ env.OP_CO }}
   deploy-component:
-    name: Plan for ${{ matrix.component }}
+    name: Plan ${{ matrix.environment }}-${{ matrix.component }}
     needs:  detect-components
     runs-on: ubuntu-latest
     env:
       OP_CO: alh
     strategy:
       matrix:
+        environment: [nonprd, preprd, prd]
         component: ${{ fromJson(needs.detect-components.outputs.component_matrix) }}
     steps:
       - uses: actions/checkout@v4
-      - name: Deploying target components
-        id: target-comp
-        uses: ./.github/actions/target
+      - name: merge config
+        id: config
+        uses: ./.github/actions/merge-config
         with:
-          opcopath: ${{ env.OP_CO }}
+          source: ./${{ env.OP_CO }}/${{ matrix.component }}/${{ matrix.environment }}-config.yaml
+          target: ./${{ env.OP_CO }}/${{ matrix.component }}/project-config.yaml
+
       - name: Printing
         shell: bash
         run: |
-          echo "Running job for ${{ env.OP_CO }} & component: ${{ matrix.component }}"
+          echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-{{ matrix.component }}"
+          echo "config_path=${{ steps.config.outputs.config_path }}"
       
       
