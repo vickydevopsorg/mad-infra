@@ -20,7 +20,7 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           separator: ","
-
+          files_ignore: .github/**
       - name: List all changed files
         run: |
           echo "All changed files: ${{ steps.changed_files.outputs.all_modified_files }}"
