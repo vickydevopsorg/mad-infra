@@ -35,12 +35,25 @@ jobs:
         run: |
           echo "Running job for OPCO: ${{ matrix.opco }}"
       
-      - name: Deploying target components
-        id: target-comp
-        uses: ./.github/actions/target
-        with:
-          opcopath: ${{ matrix.opco }}
-      
-      - name: printing
+      # - name: Deploying target components
+      #   id: target-comp
+      #   uses: ./.github/actions/target
+      #   with:
+      #     opcopath: ${{ matrix.opco }}
+
+  deploy-component:
+    needs: detect_changes
+    name: Deploying ${{ matrix.opco }}-${{ matrix.component }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        opco: ${{ fromJson(needs.detect_changes.outputs.opco_matrix) }}
+        component: ["central-comp", "databricks", "firewall"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Printing
+        shell: bash
         run: |
-          echo "changed files for opco ${{ matrix.opco }} are ${{ steps.target-comp.outputs.component_matrix }}"
+          echo "Running job for ${{ matrix.opco }} & component: ${{ matrix.component }}"
+      
+      
