@@ -4,6 +4,7 @@ inputs:
   opcopath:
     description: "The path to the opco folder"
     required: true
+    default: "alh"
 outputs:
   component_matrix:
     description: "The target components"
