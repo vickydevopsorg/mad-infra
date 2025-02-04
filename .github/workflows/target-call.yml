@@ -3,8 +3,8 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - 'mad-infra/alh/**'
+    # paths:
+    #   - 'mad-infra/alh/**'
 
 permissions:
   id-token: write
