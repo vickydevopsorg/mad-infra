@@ -21,6 +21,7 @@ jobs:
       component_matrix: ${{ steps.target-comp.outputs.component_matrix }}
     steps:
       - uses: actions/checkout@v4
+ 
       - name: Deploying target components
         id: target-comp
         uses: ./.github/actions/target
@@ -38,6 +39,12 @@ jobs:
         component: ${{ fromJson(needs.detect-components.outputs.component_matrix) }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        name: mad-core checkout
+        with:
+         repository: vickydevopsorg/mad-core
+         ref: main
+
       - name: merge config
         id: config
         uses: ./.github/actions/merge-config
@@ -49,6 +56,7 @@ jobs:
         shell: bash
         id: tfconfig 
         run: |
+          ls -l
           echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
           echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
           echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
@@ -60,11 +68,11 @@ jobs:
       #      echo "${{ steps.tfconfig.outputs.deploy_config }}"
       #      echo "${{ steps.tfconfig.outputs.backends_config }}"
 
-      - uses: vickydevopsorg/mad-core/.github/actions/terraform@main
-        with:
-          environment: ${{ matrix.environment }}
-          deployment_target: ${{ matrix.component }}
-          backends_config: ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
-          deploy_config: ${{ env.OP_CO }}/${{ matrix.component }}/config.yaml
+      # - uses: vickydevopsorg/mad-core/.github/actions/terraform@main
+      #   with:
+      #     environment: ${{ matrix.environment }}
+      #     deployment_target: ${{ matrix.component }}
+      #     backends_config: ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
+      #     deploy_config: ${{ env.OP_CO }}/${{ matrix.component }}/config.yaml
       
       
