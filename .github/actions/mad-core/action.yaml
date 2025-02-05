@@ -15,10 +15,8 @@ runs:
         repository: vickydevopsorg/mad-core
         ref: main
         path: mad-core
-        sparse-checkout: |
-          .github
-          backends
-          central-comp
+        fetch-depth: 0
+        
     - name: check dir
       shell: bash
       run:  |
