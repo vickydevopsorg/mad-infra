@@ -19,7 +19,6 @@ runs:
           .github
           backends
           central-comp
-        token: ${{ secrets.GITHUB_TOKEN }}
     - name: check dir
       shell: bash
       run:  |
