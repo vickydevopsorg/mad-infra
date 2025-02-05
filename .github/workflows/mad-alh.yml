@@ -69,7 +69,7 @@ jobs:
          ref: main
          path: mad-core
 
-      - uses: mad-core/.github/actions/terraform@main
+      - uses: mad-core/.github/actions/terraform
         with:
           environment: ${{ matrix.environment }}
           deployment_target: ${{ matrix.component }}
