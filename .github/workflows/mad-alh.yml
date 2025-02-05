@@ -48,7 +48,7 @@ jobs:
       - name: check dir
         shell: bash
         run: |
-          cd ../
+          cd  mad-core
           ls -l
       # - name: merge config
       #   id: config
