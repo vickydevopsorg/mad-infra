@@ -44,9 +44,11 @@ jobs:
         with:
          repository: vickydevopsorg/mad-core
          ref: main
+         path: mad-core
       - name: check dir
         shell: bash
         run: |
+          cd ../
           ls -l
       # - name: merge config
       #   id: config
