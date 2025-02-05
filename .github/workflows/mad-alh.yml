@@ -67,8 +67,9 @@ jobs:
         with:
          repository: vickydevopsorg/mad-core
          ref: main
+         path: mad-core
 
-      - uses: vickydevopsorg/mad-core/.github/actions/terraform@main
+      - uses: mad-core/.github/actions/terraform@main
         with:
           environment: ${{ matrix.environment }}
           deployment_target: ${{ matrix.component }}
