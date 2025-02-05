@@ -19,6 +19,7 @@ runs:
       with:
         separator: ","
         path: ${{ inputs.opcopath }}
+        files_ignore: backend/**
     - name: List all changed opcos
       id: target_comp
       shell: bash
