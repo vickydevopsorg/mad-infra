@@ -44,22 +44,25 @@ jobs:
         with:
          repository: vickydevopsorg/mad-core
          ref: main
-
-      - name: merge config
-        id: config
-        uses: ./.github/actions/merge-config
-        with:
-          source: ./${{ env.OP_CO }}/${{ matrix.component }}/${{ matrix.environment }}-config.yaml
-          target: ./${{ env.OP_CO }}/${{ matrix.component }}/project-config.yaml
-
-      - name: Output config
+      - name: check dir
         shell: bash
-        id: tfconfig 
         run: |
           ls -l
-          echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
-          echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
-          echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
+      # - name: merge config
+      #   id: config
+      #   uses: ./.github/actions/merge-config
+      #   with:
+      #     source: ./${{ env.OP_CO }}/${{ matrix.component }}/${{ matrix.environment }}-config.yaml
+      #     target: ./${{ env.OP_CO }}/${{ matrix.component }}/project-config.yaml
+
+      # - name: Output config
+      #   shell: bash
+      #   id: tfconfig 
+      #   run: |
+      #     ls -l
+      #     echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
+      #     echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
+      #     echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
       
       # - name: print output
       #   shell: bash
