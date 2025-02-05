@@ -27,7 +27,7 @@ runs:
         cd mad-core
         ls -l
         echo "Checking out mad-core"
-    - name: Run Terraform
-      uses: vickydevopsorg/mad-core/.github/actions/terraform@main
+    # - name: Run Terraform
+    #   uses: vickydevopsorg/mad-core/.github/actions/terraform@main
 
       
