@@ -1,0 +1,34 @@
+name: Determine opcos
+description: Checks which opcos have changed and sets the matrix for the next job
+outputs:
+  ref:
+    description: "The mad core version"
+    value: main
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/checkout@v4
+      name: mad-core checkout
+      with:
+        repository: vickydevopsorg/mad-core
+        ref: main
+        path: mad-core
+        sparse-checkout: |
+          .github
+          backends
+          central-comp
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: check dir
+      shell: bash
+      run:  |
+        pwd
+        ls -l
+        cd mad-core
+        ls -l
+        echo "Checking out mad-core"
+    - name: Run Terraform
+      uses: vickydevopsorg/mad-core/.github/actions/terraform@main
+
+      

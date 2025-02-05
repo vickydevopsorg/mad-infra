@@ -12,68 +12,76 @@ permissions:
   pull-requests: write
 
 jobs:
-  detect-components:
-    name: Determine target components alh
+ check-mad-core:
+    name: Test
     runs-on: ubuntu-latest
-    env:
-      OP_CO: alh
-    outputs:
-      component_matrix: ${{ steps.target-comp.outputs.component_matrix }}
     steps:
       - uses: actions/checkout@v4
+      - name: mad core
+        id: mad-core
+        uses: ./.github/actions/mad-core
+  # detect-components:
+  #   name: Determine target components alh
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     OP_CO: alh
+  #   outputs:
+  #     component_matrix: ${{ steps.target-comp.outputs.component_matrix }}
+  #   steps:
+  #     - uses: actions/checkout@v4
  
-      - name: Deploying target components
-        id: target-comp
-        uses: ./.github/actions/target
-        with:
-          opcopath: ${{ env.OP_CO }}
-  deploy-component:
-    name: Plan ${{ matrix.environment }}-${{ matrix.component }}
-    needs:  detect-components
-    runs-on: ubuntu-latest
-    env:
-      OP_CO: alh
-    strategy:
-      matrix:
-        environment: [nonprd]
-        component: ${{ fromJson(needs.detect-components.outputs.component_matrix) }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: merge config
-        id: config
-        uses: ./.github/actions/merge-config
-        with:
-          source: ./${{ env.OP_CO }}/${{ matrix.component }}/${{ matrix.environment }}-config.yaml
-          target: ./${{ env.OP_CO }}/${{ matrix.component }}/project-config.yaml
+  #     - name: Deploying target components
+  #       id: target-comp
+  #       uses: ./.github/actions/target
+  #       with:
+  #         opcopath: ${{ env.OP_CO }}
+  # deploy-component:
+  #   name: Plan ${{ matrix.environment }}-${{ matrix.component }}
+  #   needs:  detect-components
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     OP_CO: alh
+  #   strategy:
+  #     matrix:
+  #       environment: [nonprd]
+  #       component: ${{ fromJson(needs.detect-components.outputs.component_matrix) }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: merge config
+  #       id: config
+  #       uses: ./.github/actions/merge-config
+  #       with:
+  #         source: ./${{ env.OP_CO }}/${{ matrix.component }}/${{ matrix.environment }}-config.yaml
+  #         target: ./${{ env.OP_CO }}/${{ matrix.component }}/project-config.yaml
 
-      - name: Output config
-        shell: bash
-        id: tfconfig 
-        run: |
-          ls -l
-          echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
-          echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
-          echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
+  #     - name: Output config
+  #       shell: bash
+  #       id: tfconfig 
+  #       run: |
+  #         ls -l
+  #         echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
+  #         echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
+  #         echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
       
-      - name: print output
-        shell: bash
-        run: |
-           echo "Printing all configs"
-           echo "${{ steps.tfconfig.outputs.deploy_config }}"
-           echo "${{ steps.tfconfig.outputs.backends_config }}"
+  #     - name: print output
+  #       shell: bash
+  #       run: |
+  #          echo "Printing all configs"
+  #          echo "${{ steps.tfconfig.outputs.deploy_config }}"
+  #          echo "${{ steps.tfconfig.outputs.backends_config }}"
       
-      - uses: actions/checkout@v4
-        name: mad-core checkout
-        with:
-         repository: vickydevopsorg/mad-core
-         ref: main
-         path: mad-core
+  #     - uses: actions/checkout@v4
+  #       name: mad-core checkout
+  #       with:
+  #        repository: vickydevopsorg/mad-core
+  #        ref: main
+  #        path: mad-core
 
-      - uses: mad-core/.github/actions/terraform
-        with:
-          environment: ${{ matrix.environment }}
-          deployment_target: ${{ matrix.component }}
-          backends_config: ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
-          deploy_config: ${{ env.OP_CO }}/${{ matrix.component }}/config.yaml
+  #     - uses: vickydevopsorg/mad-core/.github/actions/terraform
+  #       with:
+  #         environment: ${{ matrix.environment }}
+  #         deployment_target: ${{ matrix.component }}
+  #         backends_config: ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
+  #         deploy_config: ${{ env.OP_CO }}/${{ matrix.component }}/config.yaml
       
       
