@@ -1,13 +1,13 @@
 name: Determine target components
-description: Checks which components have to be deployed
+description: Checks which environment have to be deployed
 inputs:
   opcopath:
     description: "The path to the opco folder"
     required: true
 outputs:
-  component_matrix:
-    description: "The target components"
-    value:  ${{ steps.target_comp.outputs.component_matrix }}
+  environment_matrix:
+    description: "The target environments"
+    value:  ${{ steps.target_comp.outputs.environment_matrix }}
 runs:
   using: "composite"
   steps:
@@ -25,5 +25,10 @@ runs:
       shell: bash
       run: |
         changed_files=${{ steps.changed_files.outputs.all_modified_files }}
-        component_matrix=$(echo "$changed_files" | tr ',' '\n' | cut -d'/' -f1 | sort -u | jq -R -s -c 'split("\n")[:-1]')
-        echo "component_matrix=$component_matrix" >> $GITHUB_OUTPUT
+
+        environment_matrix=$(echo "$changed_files" | tr ',' '\n' | grep -oE '/(nonprd|preprd|prd)-config.yaml' | cut -d'/' -f2 | sort -u | jq -R -s -c 'split("\n")[:-1]')
+        echo "environment_matrix=$environment_matrix" >> $GITHUB_OUTPUT 
+        if echo "$changed_files" | grep -q "project-config.yaml"; then
+          environment_matrix='["nonprd", "preprd", "prd"]'
+        fi
+  

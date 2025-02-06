@@ -1,24 +1,24 @@
-name: Target Mad Components for ALH
+name: Mad Central-Components for ALH
 on:
   pull_request:
     branches:
       - main
     paths:
-      - 'alh/**'
+      - 'alh/central-comp/**'
 
 permissions:
   id-token: write
   contents: read
   pull-requests: write
-
+env:
+  OP_CO: alh
+  target: central-comp
 jobs:
   detect-components:
     name: Determine target components alh
     runs-on: ubuntu-latest
-    env:
-      OP_CO: alh
     outputs:
-      component_matrix: ${{ steps.target-comp.outputs.component_matrix }}
+      environment_matrix: ${{ steps.target-comp.outputs.environment_matrix }}
     steps:
       - uses: actions/checkout@v4
  
@@ -28,7 +28,7 @@ jobs:
         with:
           opcopath: ${{ env.OP_CO }}
   # deploy-component:
-  #   name: Plan ${{ matrix.environment }}-${{ matrix.component }}
+  #   name: Plan-cental-comp-${{ matrix.environment }}
   #   needs:  detect-components
   #   runs-on: ubuntu-latest
   #   env:
@@ -36,7 +36,7 @@ jobs:
   #   strategy:
   #     matrix:
   #       environment: [nonprd, preprd, prd]
-  #       component: ${{ fromJson(needs.detect-components.outputs.component_matrix) }}
+  #       component: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
   #   steps:
   #     - uses: actions/checkout@v4
   #     - name: merge config
