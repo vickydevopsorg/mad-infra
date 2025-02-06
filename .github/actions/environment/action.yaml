@@ -24,8 +24,8 @@ runs:
       id: target_comp
       shell: bash
       run: |
-        #changed_files=${{ steps.changed_files.outputs.all_modified_files }}
-        changed_files="central-comp/nonprd-config.yaml,central-comp/project-config.yaml"
+        changed_files=${{ steps.changed_files.outputs.all_modified_files }}
+        #changed_files="central-comp/nonprd-config.yaml,central-comp/project-config.yaml"
         # If project-config.yaml is changed, deploy to all environments
         if echo "$changed_files" | grep -q "project-config.yaml"; then
           environment_matrix='["nonprd", "preprd", "prd"]'
