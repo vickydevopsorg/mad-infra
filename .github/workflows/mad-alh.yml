@@ -12,6 +12,14 @@ permissions:
   pull-requests: write
 
 jobs:
+  call-mad-flow:
+    uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
+    secrets: inherit
+    with:
+      environment: nonprd
+      deployment_target: "central-comp"
+      deploy_config: "I am a config"
+      backends_config: "I am a backend"
   # detect-components:
   #   name: Determine target components alh
   #   runs-on: ubuntu-latest
@@ -60,14 +68,6 @@ jobs:
   #          echo "Printing all configs"
   #          echo "${{ steps.tfconfig.outputs.deploy_config }}"
   #          echo "${{ steps.tfconfig.outputs.backends_config }}"
-  call-mad-flow:
-    uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
-    secrets: inherit
-    with:
-      environment: nonprd
-      deployment_target: "central-comp"
-      deploy_config: "I am a config"
-      backends_config: "I am a backend"
   # check-mad-core:
   #   name: Test
   #   runs-on: ubuntu-latest

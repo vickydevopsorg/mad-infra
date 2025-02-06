@@ -13,7 +13,8 @@ runs:
       uses: tj-actions/changed-files@v45
       with:
         separator: ","
-        files_ignore: .github/**
+        files_ignore: ".github/**,./ba"
+        files_ignore_separator: ','
     - name: List all changed opcos
       id: opco
       shell: bash
