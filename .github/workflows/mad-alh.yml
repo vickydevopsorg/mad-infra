@@ -12,13 +12,26 @@ permissions:
   pull-requests: write
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    outputs: 
+      deploy_config: ${{ steps.config.outputs.config_path }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test
+        id: config
+        run: |
+          echo deploy_config="vicky" >> $GITHUB_OUTPUT
   call-mad-flow:
     uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
     secrets: inherit
+    needs: test
     with:
       environment: nonprd
       deployment_target: "central-comp"
-      deploy_config: "I am a config"
+      deploy_config: ${{ needs.test.outputs.deploy_config }}
       backends_config: "I am a backend"
   # detect-components:
   #   name: Determine target components alh
