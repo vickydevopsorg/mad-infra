@@ -15,18 +15,28 @@ env:
   target: central-comp
 jobs:
   detect-components:
-    name: Determine target components alh
+    name: Determine target env central-comp
     runs-on: ubuntu-latest
     outputs:
       environment_matrix: ${{ steps.target-comp.outputs.environment_matrix }}
     steps:
       - uses: actions/checkout@v4
- 
-      - name: Deploying target components
-        id: target-comp
-        uses: ./.github/actions/target
+      - name: checking changed environment
+        id: environment
+        uses: ./.github/actions/environment
         with:
           opcopath: ${{ env.OP_CO }}
+  call-mad-flow:
+    uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
+    secrets: inherit
+    needs: detect-components
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
+    with:
+      environment: ${{ matrix.environment }}
+      deployment_target: "central-comp"
+
   # deploy-component:
   #   name: Plan-cental-comp-${{ matrix.environment }}
   #   needs:  detect-components
@@ -53,18 +63,7 @@ jobs:
   #         echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
   #         echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
       
-  call-mad-flow:
-    uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
-    secrets: inherit
-    needs: detect-components
-    strategy:
-      matrix:
-        environment: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
-    with:
-      environment: ${{ matrix.environment }}
-      deployment_target: "central-comp"
-      deploy_config: "test"
-      backends_config: "I am a backend"
+
   # check-mad-core:
   #   name: Test
   #   runs-on: ubuntu-latest
