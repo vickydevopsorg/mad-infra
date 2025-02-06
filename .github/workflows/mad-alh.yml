@@ -12,14 +12,6 @@ permissions:
   pull-requests: write
 
 jobs:
- check-mad-core:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: mad core
-        id: mad-core
-        uses: ./.github/actions/mad-core
   # detect-components:
   #   name: Determine target components alh
   #   runs-on: ubuntu-latest
@@ -58,7 +50,6 @@ jobs:
   #       shell: bash
   #       id: tfconfig 
   #       run: |
-  #         ls -l
   #         echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
   #         echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
   #         echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
@@ -69,6 +60,25 @@ jobs:
   #          echo "Printing all configs"
   #          echo "${{ steps.tfconfig.outputs.deploy_config }}"
   #          echo "${{ steps.tfconfig.outputs.backends_config }}"
+  call-mad-flow:
+    uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
+    secrets: inherit
+    with:
+      environment: nonprd
+      deployment_target: "central-comp"
+      deploy_config: "I am a config"
+      backends_config: "I am a backend"
+  # check-mad-core:
+  #   name: Test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: mad core
+  #       id: mad-core
+  #       uses: ./.github/actions/mad-core
+
+
+
       
   #     - uses: actions/checkout@v4
   #       name: mad-core checkout
