@@ -33,7 +33,7 @@ jobs:
     needs: detect-components
     strategy:
       matrix:
-        environment: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
+        environment: ${{ needs.detect-components.outputs.environment_matrix }}
     with:
       environment: ${{ matrix.environment }}
       deployment_target: "central-comp"
