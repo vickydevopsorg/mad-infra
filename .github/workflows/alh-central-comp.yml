@@ -27,26 +27,26 @@ jobs:
         uses: ./.github/actions/environment
         with:
           opcopath: ${{ env.OP_CO }}
-  check-output:
-    runs-on: ubuntu-latest
-    needs: detect-components
-    steps:
-      - name: Output
-        run: |
-          echo "Environment Matrix: ${{ needs.detect-components.outputs.environment_matrix }}"
-          echo "OPCO: ${{ needs.detect-components.outputs.opco }}"
-  # call-mad-flow:
-  #   uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
-  #   secrets: inherit
+  # check-output:
+  #   runs-on: ubuntu-latest
   #   needs: detect-components
-  #   strategy:
-  #     matrix:
-  #       environment: ${{ needs.detect-components.outputs.environment_matrix }}
-  #   with:
-  #     environment: ${{ matrix.environment }}
-  #     deployment_target: "central-comp"
-  #     opco: ${{ needs.detect-components.outputs.opco }}
-  #     mad_version: "main"
+  #   steps:
+  #     - name: Output
+  #       run: |
+  #         echo "Environment Matrix: ${{ needs.detect-components.outputs.environment_matrix }}"
+  #         echo "OPCO: ${{ needs.detect-components.outputs.opco }}"
+  call-mad-flow:
+    uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
+    secrets: inherit
+    needs: detect-components
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
+    with:
+      environment: ${{ matrix.environment }}
+      deployment_target: "central-comp"
+      opco: ${{ needs.detect-components.outputs.opco }}
+      mad_version: "main"
 
   # deploy-component:
   #   name: Plan-cental-comp-${{ matrix.environment }}
