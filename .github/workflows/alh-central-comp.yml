@@ -36,6 +36,7 @@ jobs:
     with:
       environment: ${{ matrix.environment }}
       deployment_target: "central-comp"
+      opco: ${{ env.OP_CO }}
 
   # deploy-component:
   #   name: Plan-cental-comp-${{ matrix.environment }}
