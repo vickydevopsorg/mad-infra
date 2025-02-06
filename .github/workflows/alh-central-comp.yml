@@ -27,32 +27,31 @@ jobs:
         uses: ./.github/actions/target
         with:
           opcopath: ${{ env.OP_CO }}
-  # deploy-component:
-  #   name: Plan-cental-comp-${{ matrix.environment }}
-  #   needs:  detect-components
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     OP_CO: alh
-  #   strategy:
-  #     matrix:
-  #       environment: [nonprd, preprd, prd]
-  #       component: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: merge config
-  #       id: config
-  #       uses: ./.github/actions/merge-config
-  #       with:
-  #         source: ./${{ env.OP_CO }}/${{ matrix.component }}/${{ matrix.environment }}-config.yaml
-  #         target: ./${{ env.OP_CO }}/${{ matrix.component }}/project-config.yaml
+  deploy-component:
+    name: Plan-cental-comp-${{ matrix.environment }}
+    needs:  detect-components
+    runs-on: ubuntu-latest
+    env:
+      OP_CO: alh
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: merge config
+        id: config
+        uses: ./.github/actions/merge-config
+        with:
+          source: ./${{ env.OP_CO }}/${{ env.target }}/${{ matrix.environment }}-config.yaml
+          target: ./${{ env.OP_CO }}/${{ env.target }}/project-config.yaml
 
-  #     - name: Output config
-  #       shell: bash
-  #       id: tfconfig 
-  #       run: |
-  #         echo "Running job for ${{ env.OP_CO }}-${{ matrix.environment }}-${{ matrix.component }}"
-  #         echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
-  #         echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
+      - name: Output config
+        shell: bash
+        id: tfconfig 
+        run: |
+          echo "Running job for ${{ env.OP_CO }}-${{ env.target }}-${{ matrix.environment }}"
+          echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
+          echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
       
   # call-mad-flow:
   #   uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
