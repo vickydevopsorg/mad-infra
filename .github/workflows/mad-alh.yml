@@ -12,42 +12,21 @@ permissions:
   pull-requests: write
 
 jobs:
-  test:
-    name: Test
+  detect-components:
+    name: Determine target components alh
     runs-on: ubuntu-latest
-    outputs: 
-      deploy_config: "vicky i am"
-
+    env:
+      OP_CO: alh
+    outputs:
+      component_matrix: ${{ steps.target-comp.outputs.component_matrix }}
     steps:
       - uses: actions/checkout@v4
-      - name: Test
-        id: config
-        run: |
-          echo deploy_config="vicky" >> $GITHUB_OUTPUT
-  call-mad-flow:
-    uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
-    secrets: inherit
-    needs: test
-    with:
-      environment: nonprd
-      deployment_target: "central-comp"
-      deploy_config: ${{ needs.test.outputs.deploy_config }}
-      backends_config: "I am a backend"
-  # detect-components:
-  #   name: Determine target components alh
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     OP_CO: alh
-  #   outputs:
-  #     component_matrix: ${{ steps.target-comp.outputs.component_matrix }}
-  #   steps:
-  #     - uses: actions/checkout@v4
  
-  #     - name: Deploying target components
-  #       id: target-comp
-  #       uses: ./.github/actions/target
-  #       with:
-  #         opcopath: ${{ env.OP_CO }}
+      - name: Deploying target components
+        id: target-comp
+        uses: ./.github/actions/target
+        with:
+          opcopath: ${{ env.OP_CO }}
   # deploy-component:
   #   name: Plan ${{ matrix.environment }}-${{ matrix.component }}
   #   needs:  detect-components
@@ -56,7 +35,7 @@ jobs:
   #     OP_CO: alh
   #   strategy:
   #     matrix:
-  #       environment: [nonprd]
+  #       environment: [nonprd, preprd, prd]
   #       component: ${{ fromJson(needs.detect-components.outputs.component_matrix) }}
   #   steps:
   #     - uses: actions/checkout@v4
@@ -75,6 +54,16 @@ jobs:
   #         echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
   #         echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
       
+  # call-mad-flow:
+  #   uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
+  #   secrets: inherit
+  #   needs: test
+  #   with:
+  #     environment: nonprd
+  #     deployment_target: "central-comp"
+  #     deploy_config: ${{ needs.test.outputs.deploy_config }}
+  #     backends_config: "I am a backend"
+
   #     - name: print output
   #       shell: bash
   #       run: |
