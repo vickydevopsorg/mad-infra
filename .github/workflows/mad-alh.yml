@@ -16,7 +16,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     outputs: 
-      deploy_config: ${{ steps.config.outputs.config_path }}
+      deploy_config: "vicky i am"
 
     steps:
       - uses: actions/checkout@v4
