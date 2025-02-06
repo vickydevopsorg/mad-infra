@@ -10,9 +10,7 @@ outputs:
     value:  ${{ steps.target_comp.outputs.environment_matrix }}
 runs:
   using: "composite"
-  steps:
-    - uses: actions/checkout@v4
-    
+  steps:   
     - name: Determine changed files
       id: changed_files
       uses: tj-actions/changed-files@v45
