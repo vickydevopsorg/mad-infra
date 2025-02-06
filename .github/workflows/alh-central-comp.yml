@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       environment_matrix: ${{ steps.target-comp.outputs.environment_matrix }}
+      opco: ${{ env.OP_CO }}
     steps:
       - uses: actions/checkout@v4
       - name: checking changed environment
@@ -36,7 +37,7 @@ jobs:
     with:
       environment: ${{ matrix.environment }}
       deployment_target: "central-comp"
-      opco: ${{ env.OP_CO }}
+      opco: ${{ needs.detect-components.outputs.opco }}
 
   # deploy-component:
   #   name: Plan-cental-comp-${{ matrix.environment }}
