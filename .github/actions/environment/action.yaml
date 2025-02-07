@@ -1,0 +1,34 @@
+name: Determine target components
+description: Checks which environment have to be deployed
+inputs:
+  opcopath:
+    description: "The path to the opco folder"
+    required: true
+outputs:
+  environment_matrix:
+    description: "The target environments"
+    value:  ${{ steps.target_comp.outputs.environment_matrix }}
+runs:
+  using: "composite"
+  steps:   
+    - name: Determine changed files
+      id: changed_files
+      uses: tj-actions/changed-files@v45
+      with:
+        separator: ","
+        path: ${{ inputs.opcopath }}
+        files_ignore: backends/**
+    - name: List all changed opcos
+      id: target_comp
+      shell: bash
+      run: |
+        changed_files=${{ steps.changed_files.outputs.all_modified_files }}
+        #changed_files="central-comp/nonprd-config.yaml,central-comp/project-config.yaml"
+        # If project-config.yaml is changed, deploy to all environments
+        if echo "$changed_files" | grep -q "project-config.yaml"; then
+          environment_matrix='["nonprd", "preprd", "prd"]'
+        else
+         # Extract environments
+          environment_matrix=$(echo "$changed_files" | grep -oE '/(nonprd|preprd|prd)-config.yaml' | cut -d'/' -f2 | sed 's/-config.yaml//' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+        fi
+        echo "environment_matrix=$environment_matrix" >> "$GITHUB_OUTPUT"

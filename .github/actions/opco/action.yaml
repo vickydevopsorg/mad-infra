@@ -1,0 +1,25 @@
+name: Determine opcos
+description: Checks which opcos have changed and sets the matrix for the next job
+outputs:
+  opco_matrix:
+    description: "The changed opcos"
+    value: ${{ steps.opco.outputs.opco_matrix }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - name: Determine changed files
+      id: changed_files
+      uses: tj-actions/changed-files@v45
+      with:
+        separator: ","
+        files_ignore: ".github/**,./ba"
+        files_ignore_separator: ','
+    - name: List all changed opcos
+      id: opco
+      shell: bash
+      run: |
+        CONFIG_PATHS=${{ steps.changed_files.outputs.all_modified_files }}
+        UNIQUE_OPCOS=$(echo "$CONFIG_PATHS" | tr ',' '\n' | cut -d'/' -f1 | sort -u | jq -R . | jq -s -c .)
+        echo "Unique OPCOs: $UNIQUE_OPCOS"
+        echo "opco_matrix=$UNIQUE_OPCOS" >> $GITHUB_OUTPUT
