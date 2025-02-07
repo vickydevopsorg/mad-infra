@@ -36,9 +36,9 @@ jobs:
           opcopath: ${{ env.OP_CO }}
       
       - name: Check event
-        if: ${{ github.event.pull_request.draft }}
+        if: ${{ !github.event.pull_request.draft }}
         run: |
-          echo "I am draft"
+          echo "I am review pr"
 
 #   call-mad-flow:
 #     uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
