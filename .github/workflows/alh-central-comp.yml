@@ -1,10 +1,14 @@
 name: Mad Central-Components for ALH
 on:
+  pull_request_review:
+    types:
+      - submitted
   pull_request:
     types:
       - opened
       - ready_for_review
       - synchronize
+      - reopened
       
     branches:
       - main
@@ -21,24 +25,42 @@ env:
   OP_CO: alh
   target: central-comp
 jobs:
-  detect-components:
-    name: Determine target env central-comp
+  plan:
     runs-on: ubuntu-latest
-    outputs:
-      environment_matrix: ${{ steps.environment.outputs.environment_matrix }}
-      opco: ${{ env.OP_CO }}
     steps:
-      - uses: actions/checkout@v4
-      - name: checking changed environment
-        id: environment
-        uses: ./.github/actions/environment
-        with:
-          opcopath: ${{ env.OP_CO }}
-      
       - name: Check event
-        if: ${{ !github.event.pull_request.draft }}
         run: |
-          echo "I am review pr"
+          echo "I am plan"
+  
+  apply:
+    runs-on: ubuntu-latest
+    if: github.event_name =='pull_request_review' && github.event.review.state == 'approved'
+    steps:
+      - name: Check event
+        run: |
+          echo "I am auto apply"  
+  # detect-components:
+  #   name: Determine target env central-comp
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     environment_matrix: ${{ steps.environment.outputs.environment_matrix }}
+  #     opco: ${{ env.OP_CO }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: checking changed environment
+  #       id: environment
+  #       uses: ./.github/actions/environment
+  #       with:
+  #         opcopath: ${{ env.OP_CO }}
+      
+  #     - name: Check event
+  #       if: ${{ !github.event.pull_request.draft }}
+  #       run: |
+  #         echo "I am review pr"
+      
+  #     - name: Check approval
+  #       run: |
+  #         echo "${{ github.event.pull_request. }}"      
 
 #   call-mad-flow:
 #     uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
