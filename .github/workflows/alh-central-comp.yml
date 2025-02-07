@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - 'alh/central-comp/**'
+  
 
 permissions:
   id-token: write
@@ -28,20 +29,25 @@ jobs:
         uses: ./.github/actions/environment
         with:
           opcopath: ${{ env.OP_CO }}
+      
+      - name: Check event
+        if: ${{ github.event.pull_request.draft }}
+        run: |
+          echo "I am draft"
 
-  call-mad-flow:
-    uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
-    secrets: inherit
-    needs: detect-components
-    strategy:
-      matrix:
-#        environment: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
-        environment: ["nonprd"]
-    with:
-      environment: ${{ matrix.environment }}
-      deployment_target: "central-comp"
-      opco: ${{ needs.detect-components.outputs.opco }}
-      mad_version: "main"
+#   call-mad-flow:
+#     uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
+#     secrets: inherit
+#     needs: detect-components
+#     strategy:
+#       matrix:
+# #        environment: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
+#         environment: ["nonprd"]
+#     with:
+#       environment: ${{ matrix.environment }}
+#       deployment_target: "central-comp"
+#       opco: ${{ needs.detect-components.outputs.opco }}
+#       mad_version: "main"
 
   # deploy-component:
   #   name: Plan-cental-comp-${{ matrix.environment }}
