@@ -24,6 +24,15 @@ runs:
         EOF
        
         cat README.md
+
+    - name: push
+      shell: bash
+      run: |
+        git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+        git config --local user.name "${{ github.actor }}"
+        git add README.md
+        git commit -m "Update README.md"
+        git push
     # - name: Append Environment Specific Details
     #   working-directory: "alh/users/${{ inputs.usecase_folder }}"
     #   shell: bash
