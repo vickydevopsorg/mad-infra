@@ -1,0 +1,46 @@
+name: "Create Usecase README.md"
+description: "Creates a usecase README.md file for a given usecase."
+inputs:
+  usecase_folder:
+    description: "Usecase folder"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create Readme
+      shell: bash
+      working-directory: "alh/users/${{ inputs.usecase_folder }}"
+      run: |
+      
+        # create Readme file & add usecase details,
+        echo "## MAD Infra Details" > README.md
+        # Extract project specific details
+        yq -r '"**Usecase:** \(.project)"' project-config.yaml >> README.md
+        # Add table header
+        cat <<EOF >> README.md
+        | Environment | SPN | Workspace URL | User | PowerUser | Azure Resource Group |
+        | ----------- | --- | -------------- | ---- | ---------- | -------------------- |
+        EOF
+
+    # - name: Append Environment Specific Details
+    #   working-directory: "alh/users/${{ inputs.usecase_folder }}"
+    #   shell: bash
+    #   run: |
+    #     environment=("nonprd" "prd01" "prd02" "prd03") #keeping it constant, not able to use matrix because want to create readme at one go
+    #     project=$(yq -r '.project' project-config.yaml)
+    #     for env in "${environment[@]}"; do
+    #       spn=$(yq -r '.service_principal_id' "${env}-config.yaml")
+    #       url=$(yq -r '.workspace_url' "${env}-config.yaml")
+    #       user=$(yq -r '.user_entra_group_object_id' "${env}-config.yaml")
+    #       power=$(yq -r '.power_user_entra_group_object_id' "${env}-config.yaml")
+    #       subscription_id=$(cat ../../backends/$env.tfbackend|grep 'subscription_id'|cut -d'"' -f2)
+    #       resource_index=$(yq -r '.resource_index' project-config.yaml)
+    #       rg_name=rg-mad-alh-$project-$env-weeu-$resource_index
+    #       rg_id="https://portal.azure.com/#@AholdDelhaize.onmicrosoft.com/resource/subscriptions/$subscription_id/resourceGroups/$rg_name/overview"
+    #       rg_with_hyperlink="[$rg_name]($rg_id)"
+          
+    #       # updating final config in readme
+    #       echo "$env | $spn | $url | $user | $power | $rg_with_hyperlink" >> README.md
+    #     done
+    #     cat README.md

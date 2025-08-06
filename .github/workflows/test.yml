@@ -1,0 +1,21 @@
+name: markdown
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+    branches:
+      - main
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+        
+    - name: Add environment specific details
+      uses: ./.github/actions/readme
+      with:
+        usecase_folder: mad-demoteam101
