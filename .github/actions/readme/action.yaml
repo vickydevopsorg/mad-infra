@@ -16,7 +16,7 @@ runs:
         # create Readme file & add usecase details,
         echo "## MAD Infra Details" > README.md
         # Extract project specific details
-        yq -r '"**Usecase:** \(.project)"' project-config.yaml >> README.md
+        # yq -r '"**Usecase:** \(.project)"' project-config.yaml >> README.md
         # Add table header
         cat <<EOF >> README.md
         | Environment | SPN | Workspace URL | User | PowerUser | Azure Resource Group |
