@@ -1,4 +1,4 @@
-name: markdown
+name: README Creation
 
 on:
   pull_request:
@@ -14,7 +14,9 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
-        
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
     - name: Add environment specific details
       uses: ./.github/actions/readme
       with:

@@ -22,7 +22,8 @@ runs:
         | Environment | SPN | Workspace URL | User | PowerUser | Azure Resource Group |
         | ----------- | --- | -------------- | ---- | ---------- | -------------------- |
         EOF
-
+       
+        cat README.md
     # - name: Append Environment Specific Details
     #   working-directory: "alh/users/${{ inputs.usecase_folder }}"
     #   shell: bash
