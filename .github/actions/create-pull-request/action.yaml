@@ -46,7 +46,6 @@ runs:
       #   # GH_TOKEN: ${{ env.GITHUB_TOKEN }}
       run: |
         gh pr create \
-          --draft \
           --base "${{ inputs.base }}" \
           --head "${{ inputs.branch }}" \
           --title "${{ inputs.title }}" \
