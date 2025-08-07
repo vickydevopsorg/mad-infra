@@ -1,0 +1,28 @@
+# This workflow is used to onboard a usecase. It will create the usecase config file in the infra repo.
+name: MAD Usecase Onboarding
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-usecase-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create Usecase PR
+        uses: ./.github/actions/create-pull-request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit-message: ":airplane: onboard: usecase abc"
+          base: main
+          branch: "onboard/abc"
+          title: ":airplane: onboard: usecase abc in opco alh"
+          body: "This PR adds the usecase configs for usecase `abc` in opco `alh`."
+          add-path: "${{ env.USECASE_FOLDER }}"

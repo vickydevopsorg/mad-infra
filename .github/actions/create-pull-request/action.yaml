@@ -1,0 +1,51 @@
+name: "Create Pull Request"
+description: "Creates a branch, commits files, and opens a Pull Request."
+inputs:
+  commit-message:
+    description: "The message to use when committing changes."
+    required: true
+  base:
+    description: "The pull request base branch."
+    required: true
+  branch:
+    description: "The pull request branch name."
+    required: true
+  title:
+    description: "The title of the pull request."
+    required: true
+  body:
+    description: "The body of the pull request."
+    required: true
+  add-path:
+    description: "Path to add to the pull request."
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Git user
+      shell: bash
+      run: |
+        # create a pr with the user who triggered the workflow
+        git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+        git config --local user.name "${{ github.actor }}"
+
+    - name: Create and push branch
+      shell: bash
+      run: |
+        git fetch origin ${{ inputs.base }}
+        git checkout -b ${{ inputs.branch }} origin/${{ inputs.base }}
+        git add "${{ inputs.add-path }}"
+        git commit -m "${{ inputs.commit-message }}"
+        git push --force origin ${{ inputs.branch }}
+
+    - name: Create Pull Request
+      shell: bash
+      env:
+        GH_TOKEN: ${{ env.GITHUB_TOKEN }}
+      run: |
+        gh pr create \
+          --draft \
+          --base "${{ inputs.base }}" \
+          --head "${{ inputs.branch }}" \
+          --title "${{ inputs.title }}" \
+          --body "${{ inputs.body }}"
