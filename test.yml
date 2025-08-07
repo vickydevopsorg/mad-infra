@@ -1,0 +1,55 @@
+name: markdown
+
+on:
+  workflow_dispatch:
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    # - name: checking changed projects
+    #   id: project
+    #   uses: ./.github/actions/changed-project
+    #   with:
+    #     opcopath: ${{ env.OP_CO }}/${{ env.target }}
+    # - name: create readme
+    #   run: |
+    #     cd alh/users/mad-demoteam101
+
+    #     # create Readme file & add usecase details
+    #     echo "## MAD Infra Details" > README.md
+    #     # Extract project specific details
+    #     yq -r '"**Usecase:** \(.project)"' project-config.yaml >> README.md
+    #     # Add table header
+    #     cat <<EOF >> README.md
+    #     | Environment | SPN | Workspace URL | User | PowerUser |
+    #     | ----------- | --- | -------------- | ---- | ---------- |
+    #     EOF
+        
+    - name: Add environment specific details
+      uses: ./.github/actions/readme
+      with:
+        usecase_folder: mad-demoteam101
+
+    # - name: print readme
+    #   run: |
+    #     cd alh/users/mad-demoteam101
+    #     cat README.md
+    # - name: print condition
+    #   run: |
+    #     #changed_files=cc01/nonprd-config.yaml,cc01/prd01-config.yaml,cc02/prd02-config.yaml,cc01/project-config.yaml
+    #     changed_files=""
+    #     # find the changed project directories
+    #     projects_temp=$(echo "$changed_files" | tr ',' '\n' | awk -F'/' 'NF > 1 {print $1}' | sort -u | jq -R . | jq -s .)
+
+    #      # Convert JSON to a single-line format suitable for GitHub Actions
+    #     project_matrix=$(jq -c <<< "$projects_temp")
+
+    #     if [ "$project_matrix" = "[]" ]; then
+    #       # take all projects, this is used when we want to version bump all projects
+    #       cd ./alh/databricks
+    #       project_matrix=$(ls | jq -R . | jq -s .| jq -c)
+          
+    #     fi
+    #     echo "project=$project_matrix" >> "$GITHUB_OUTPUT"
