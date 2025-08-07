@@ -1,15 +1,13 @@
-# I am coming from alh-infra/alh/central-comp/nonprd-config.yaml
-# nonprd env specific config
-
+# preprd env specific config
 # Project Configuration
 # project: "central-comp"  # Required Project identifier
 # resource_index: "01"  # Resource index for tracking
 
 # # Authentication Details
-service_principal_id: 
-  - "s456"  # service principal id
+# service_principal_id: 
+#   - "s000"  # 
 # aad_group_object_id: 
-#   - "a567" #
+#   - "a000" #
 
 # # Metadata Tags
 # tags:

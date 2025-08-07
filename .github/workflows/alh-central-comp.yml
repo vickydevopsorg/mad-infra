@@ -1,0 +1,130 @@
+name: Mad Central-Components for ALH
+on:
+  pull_request_review:
+    types:
+      - submitted
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - synchronize
+      - reopened
+      
+    branches:
+      - main
+    paths:
+      - 'alh/central-comp/**'
+  
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+env:
+  OP_CO: alh
+  target: central-comp
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check event
+        run: |
+          echo "I am plan"
+  
+  apply:
+    runs-on: ubuntu-latest
+    if: github.event_name =='pull_request_review' && github.event.review.state == 'approved'
+    steps:
+      - name: Check event
+        run: |
+          echo "I am auto apply"  
+  # detect-components:
+  #   name: Determine target env central-comp
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     environment_matrix: ${{ steps.environment.outputs.environment_matrix }}
+  #     opco: ${{ env.OP_CO }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: checking changed environment
+  #       id: environment
+  #       uses: ./.github/actions/environment
+  #       with:
+  #         opcopath: ${{ env.OP_CO }}
+      
+  #     - name: Check event
+  #       if: ${{ !github.event.pull_request.draft }}
+  #       run: |
+  #         echo "I am review pr"
+      
+  #     - name: Check approval
+  #       run: |
+  #         echo "${{ github.event.pull_request. }}"      
+
+#   call-mad-flow:
+#     uses: vickydevopsorg/mad-core/.github/workflows/terraform.yml@main
+#     secrets: inherit
+#     needs: detect-components
+#     strategy:
+#       matrix:
+# #        environment: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
+#         environment: ["nonprd"]
+#     with:
+#       environment: ${{ matrix.environment }}
+#       deployment_target: "central-comp"
+#       opco: ${{ needs.detect-components.outputs.opco }}
+#       mad_version: "main"
+
+  # deploy-component:
+  #   name: Plan-cental-comp-${{ matrix.environment }}
+  #   needs:  detect-components
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     OP_CO: alh
+  #   strategy:
+  #     matrix:
+  #       environment: ${{ fromJson(needs.detect-components.outputs.environment_matrix) }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: merge config
+  #       id: config
+  #       uses: ./.github/actions/merge-config
+  #       with:
+  #         source: ./${{ env.OP_CO }}/${{ env.target }}/${{ matrix.environment }}-config.yaml
+  #         target: ./${{ env.OP_CO }}/${{ env.target }}/project-config.yaml
+
+  #     - name: Output config
+  #       shell: bash
+  #       id: tfconfig 
+  #       run: |
+  #         echo "Running job for ${{ env.OP_CO }}-${{ env.target }}-${{ matrix.environment }}"
+  #         echo "deploy_config=${{ steps.config.outputs.config_path }}" >> $GITHUB_OUTPUT
+  #         echo "backends_config=${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend" >> $GITHUB_OUTPUT
+      
+
+  # check-mad-core:
+  #   name: Test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: mad core
+  #       id: mad-core
+  #       uses: ./.github/actions/mad-core
+
+
+
+      
+  #     - uses: actions/checkout@v4
+  #       name: mad-core checkout
+  #       with:
+  #        repository: vickydevopsorg/mad-core
+  #        ref: main
+  #        path: mad-core
+
+  #     - uses: vickydevopsorg/mad-core/.github/actions/terraform
+  #       with:
+  #         environment: ${{ matrix.environment }}
+  #         deployment_target: ${{ matrix.component }}
+  #         backends_config: ${{ env.OP_CO }}/backends/${{ matrix.environment }}.tfbackend
+  #         deploy_config: ${{ env.OP_CO }}/${{ matrix.component }}/config.yaml
