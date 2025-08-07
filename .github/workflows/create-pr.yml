@@ -25,4 +25,4 @@ jobs:
           branch: "onboard/abc"
           title: ":airplane: onboard: usecase abc in opco alh"
           body: "This PR adds the usecase configs for usecase `abc` in opco `alh`."
-          add-path: "${{ env.USECASE_FOLDER }}"
+          add-path: "mad-demoteam101"
