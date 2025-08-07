@@ -32,9 +32,11 @@ runs:
     - name: Create and push branch
       shell: bash
       run: |
+        cd alh/users/mad-demoteam101
+        echo "Hi i am readme" > README.md
         git fetch origin ${{ inputs.base }}
         git checkout -b ${{ inputs.branch }} origin/${{ inputs.base }}
-        git add "${{ inputs.add-path }}"
+        git add .
         git commit -m "${{ inputs.commit-message }}"
         git push --force origin ${{ inputs.branch }}
 
