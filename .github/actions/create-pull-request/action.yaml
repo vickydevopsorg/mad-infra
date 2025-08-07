@@ -42,8 +42,8 @@ runs:
 
     - name: Create Pull Request
       shell: bash
-      env:
-        GH_TOKEN: ${{ env.GITHUB_TOKEN }}
+      # env:
+      #   # GH_TOKEN: ${{ env.GITHUB_TOKEN }}
       run: |
         gh pr create \
           --draft \
